@@ -13,7 +13,7 @@ const SITE = {
   title: 'Zaniva — Agência Digital',
   description:
     'Sites, aplicativos, automação no WhatsApp e presença no Google Meu Negócio. Agência digital fundada por Dener Zanetoni e Weslley Paiva.',
-  url: 'https://zanivadigital.vercel.app',
+  url: 'https://zanivadigital-five.vercel.app',
   locale: 'pt_BR'
 };
 
