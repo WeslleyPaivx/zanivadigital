@@ -26,27 +26,37 @@
   /* ======================================================================
      Palco 3D
      ====================================================================== */
+  /* Celular paga caro por cada pintura do globo: ele vai com menos estrelas,
+     sem densidade de retina e em meia taxa de quadros. Atrás do véu a
+     diferença não aparece, e a rolagem deixa de travar. */
+  var touch =
+    (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches) ||
+    window.innerWidth < 860;
+
   var stageCanvas = document.getElementById('stage-canvas');
   var scene = window.createAstralShell
     ? window.createAstralShell(stageCanvas, {
         colors: ['#7c6bff', '#ffe6fa'],
         backgroundColor: 'transparent',
-        nodes: 1500,
-        connections: 3,
-        reach: 0.22,
+        nodes: touch ? 420 : 1500,
+        connections: touch ? 2 : 3,
+        reach: touch ? 0.3 : 0.22,
         clustering: 0.85,
-        chords: 0.35,
-        nodeSize: 0.9,
+        chords: touch ? 0.2 : 0.35,
+        nodeSize: touch ? 1.3 : 0.9,
         radius: 0.42,
         originY: 0.46,
         tilt: 18,
         spin: 1,
         depthFade: 0.72,
         lineOpacity: 0.7,
+        interactive: !touch,
         hoverRadius: 0.2,
         hoverBoost: 1,
         clickPulse: true,
         pulseSpeed: 1.2,
+        dpr: touch ? 1 : 2,
+        maxFps: touch ? 30 : 0,
         seed: 7
       })
     : null;
@@ -248,9 +258,9 @@
     itemScale: 0.035,
     baseScale: 0.86,
     dimAmount: 0.26,
-    blurAmount: 1.2,
-    tiltAmount: 3,
-    rotationAmount: 0.6,
+    blurAmount: touch ? 0 : 1.2,
+    tiltAmount: touch ? 0 : 3,
+    rotationAmount: touch ? 0 : 0.6,
     holdDistance: 260,
     smoothScroll: false,
     snap: false
@@ -269,10 +279,10 @@
     enableBorderGlow: true,
     enableSpotlight: true,
     spotlightRadius: 320,
-    enableStars: true,
+    enableStars: !touch,
     particleCount: 18,
-    enableTilt: true,
-    enableMagnetism: true,
+    enableTilt: !touch,
+    enableMagnetism: !touch,
     clickEffect: true,
     items: [
       {
@@ -368,8 +378,8 @@
     theme: 'dark',
     glowColor: '#ee8dd8',
     spotlightRadius: 300,
-    enableTilt: true,
-    enableMagnetism: true,
+    enableTilt: !touch,
+    enableMagnetism: !touch,
     textAutoHide: false,
     items: [
       {

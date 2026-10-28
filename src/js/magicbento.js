@@ -641,6 +641,11 @@
 
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var motion = !disableAnimations && !reduced;
+    /* Sem cursor (toque) nada do maquinário de luz tem efeito: as variáveis
+       que ele escreveria ficam constantes. Então não acompanhamos o scroll,
+       que é justamente o que travava a rolagem no celular. O clique e a
+       animação de entrada continuam. */
+    var hoverCapable = !window.matchMedia || window.matchMedia('(hover: hover)').matches;
     var playIntro = motion && intro;
     if (motion) root.setAttribute('data-motion', '');
     if (playIntro) root.setAttribute('data-intro', '');
@@ -927,35 +932,38 @@
       return card ? cards.indexOf(card) : -1;
     }
 
-    window.addEventListener('pointermove', function (event) {
-      pointer.x = event.clientX;
-      pointer.y = event.clientY;
-      pointer.inside = true;
-      wake();
-    }, { passive: true });
-
-    window.addEventListener('pointerdown', function (event) {
-      pointer.x = event.clientX;
-      pointer.y = event.clientY;
-      pointer.inside = true;
-      pointer.down = cardIndex(event.target);
-      wake();
-    }, { passive: true });
-
     function release() {
       if (pointer.down < 0) return;
       pointer.down = -1;
       wake();
     }
-    window.addEventListener('pointerup', release, { passive: true });
-    window.addEventListener('pointercancel', release, { passive: true });
 
-    document.addEventListener('pointerout', function (event) {
-      if (event.relatedTarget) return;
-      pointer.inside = false;
-      pointer.down = -1;
-      wake();
-    });
+    if (hoverCapable) {
+      window.addEventListener('pointermove', function (event) {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+        pointer.inside = true;
+        wake();
+      }, { passive: true });
+
+      window.addEventListener('pointerdown', function (event) {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+        pointer.inside = true;
+        pointer.down = cardIndex(event.target);
+        wake();
+      }, { passive: true });
+
+      window.addEventListener('pointerup', release, { passive: true });
+      window.addEventListener('pointercancel', release, { passive: true });
+
+      document.addEventListener('pointerout', function (event) {
+        if (event.relatedTarget) return;
+        pointer.inside = false;
+        pointer.down = -1;
+        wake();
+      });
+    }
 
     function activate(index, x, y) {
       var card = cards[index];
@@ -973,6 +981,7 @@
       var index = cardIndex(event.target);
       var card = cards[index];
       if (!card) return;
+      if (!hoverCapable) measure(); // sem scroll listener, os rects estão velhos
       if (event.detail === 0) {
         var rect = card.getBoundingClientRect();
         activate(index, rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -991,7 +1000,7 @@
       dirty = true;
       wake();
     }
-    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    if (hoverCapable) window.addEventListener('scroll', onScroll, { passive: true, capture: true });
     window.addEventListener('resize', onScroll, { passive: true });
 
     new ResizeObserver(function () {

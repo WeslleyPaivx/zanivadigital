@@ -78,6 +78,7 @@
     var seed = o.seed == null ? 0 : o.seed;
     var paused = Boolean(o.paused);
     var dprCap = o.dpr == null ? 2 : o.dpr;
+    var maxFps = o.maxFps == null ? 0 : o.maxFps; // 0 = sem limite
     var transparent = o.backgroundColor === 'transparent';
 
     var colorA = hexToRgb(colors[0]);
@@ -104,6 +105,10 @@
     var pz = new Float32Array(nodeTotal);
     var tint = new Float32Array(nodeTotal);
     var twinkle = new Float32Array(nodeTotal);
+    // seno e cosseno da fase guardados: o brilho sai por soma de ângulos
+    // em vez de um Math.sin por estrela por frame
+    var twSin = new Float32Array(nodeTotal);
+    var twCos = new Float32Array(nodeTotal);
 
     var golden = Math.PI * (3 - Math.sqrt(5));
     for (var i = 0; i < nodeTotal; i++) {
@@ -139,6 +144,8 @@
       pz[i] = z / length;
       tint[i] = clamp(0.5 + py[i] * 0.42 + (random() - 0.5) * 0.3, 0, 1);
       twinkle[i] = random() * Math.PI * 2;
+      twSin[i] = Math.sin(twinkle[i]);
+      twCos[i] = Math.cos(twinkle[i]);
     }
 
     /* ---------- edges ---------- */
@@ -269,6 +276,9 @@
 
       var hoverPx = hoverRadius * Math.min(width, height);
       var hoverSq = hoverPx * hoverPx;
+      var hovering = interactive && pointerIn;
+      var tSin = Math.sin(clock * 1.6);
+      var tCos = Math.cos(clock * 1.6);
 
       var pulseFront = pulseAt >= 0 ? (clock - pulseAt) * pulseSpeed : -1;
       if (pulseFront > 2.6) {
@@ -292,9 +302,9 @@
 
         var depth = (z2 + 1) * 0.5;
         var bright = 1 - depthFade + depthFade * depth;
-        bright *= 0.72 + 0.28 * Math.sin(clock * 1.6 + twinkle[i]);
+        bright *= 0.72 + 0.28 * (tSin * twCos[i] + tCos * twSin[i]);
 
-        if (interactive && pointerIn) {
+        if (hovering) {
           var ddx = sx[i] - pointerX;
           var ddy = sy[i] - pointerY;
           var dd = ddx * ddx + ddy * ddy;
@@ -370,12 +380,17 @@
       }
     }
 
+    var minFrameMs = maxFps > 0 ? 1000 / maxFps - 1 : 0;
+
     function frame(now) {
       raf = 0;
-      var dt = lastTime ? Math.min(0.05, (now - lastTime) / 1000) : 0.016;
+      if (running) raf = requestAnimationFrame(frame);
+      // no celular o globo roda em meia taxa: ele é discreto atrás do véu,
+      // e cada pintura custa caro enquanto a página rola
+      if (minFrameMs && lastTime && now - lastTime < minFrameMs) return;
+      var dt = lastTime ? Math.min(0.1, (now - lastTime) / 1000) : 0.016;
       lastTime = now;
       draw(paused ? 0 : dt);
-      if (running) raf = requestAnimationFrame(frame);
     }
 
     function start() {
