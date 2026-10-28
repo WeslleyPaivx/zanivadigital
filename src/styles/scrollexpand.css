@@ -1,0 +1,189 @@
+/* ScrollExpand — sticky stage, clip-path frame that opens on scroll,
+   media zoom, scrim, title/hint/overlay fade. Ported to vanilla JS
+   against the documented React Bits API (src, alt, title, scrollHint,
+   useWindowScroll, mediaZoom, children). */
+
+.scroll-expand {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-expand--contained {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.scroll-expand--contained::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-expand__track {
+  position: relative;
+  height: var(--se-track, 300vh);
+}
+
+.scroll-expand__stage {
+  position: sticky;
+  top: 0;
+  display: grid;
+  height: 100vh;
+  height: 100svh;
+  place-items: center;
+  overflow: hidden;
+}
+
+.scroll-expand__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: inset(
+    var(--se-inset-y, 22%) var(--se-inset-x, 24%) var(--se-inset-y, 22%) var(--se-inset-x, 24%)
+      round var(--se-radius, 28px)
+  );
+  background: #04060a;
+  will-change: clip-path;
+}
+
+.scroll-expand__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(var(--se-zoom, 1.35));
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.scroll-expand__media-slot {
+  position: absolute;
+  inset: 0;
+  transform: scale(var(--se-zoom, 1.35));
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.scroll-expand__media-slot > canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scroll-expand__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(4, 6, 10, 0.92) 0%, rgba(4, 6, 10, 0.3) 46%, rgba(4, 6, 10, 0.1) 100%);
+  opacity: var(--se-scrim, 0.3);
+  pointer-events: none;
+}
+
+.scroll-expand__title {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding-inline: var(--gutter) var(--gutter-right);
+  color: var(--frost);
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 11vw, 9rem);
+  font-stretch: 122%;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.86;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
+  opacity: var(--se-title-opacity, 1);
+  transform: translate3d(0, var(--se-title-shift, 0px), 0);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.scroll-expand__title img {
+  display: block;
+  width: min(66vw, 760px);
+  height: auto;
+  margin: 0 auto;
+  filter: drop-shadow(0 18px 60px rgba(0, 0, 0, 0.65));
+}
+
+.scroll-expand__hint {
+  position: absolute;
+  bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--mist);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: var(--se-hint-opacity, 1);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.scroll-expand__hint-rail {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 34px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.scroll-expand__hint-rail::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 12px;
+  background: var(--ice);
+  animation: scroll-expand-rail 2.1s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes scroll-expand-rail {
+  0% {
+    transform: translateY(-100%);
+  }
+  60%,
+  100% {
+    transform: translateY(340%);
+  }
+}
+
+.scroll-expand__overlay {
+  position: absolute;
+  z-index: 4;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-inline: var(--gutter) var(--gutter-right);
+  opacity: var(--se-overlay-opacity, 0);
+  transform: translate3d(0, var(--se-overlay-shift, 24px), 0);
+  will-change: transform, opacity;
+}
+
+.scroll-expand__overlay-inner {
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+@media (max-width: 640px) {
+  .scroll-expand__hint {
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .scroll-expand__overlay {
+    bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+}

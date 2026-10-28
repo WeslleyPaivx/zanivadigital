@@ -1,0 +1,163 @@
+<title>Zaniva Digital</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Chivo:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap"
+>
+<style>
+/*INJECT:css*/
+</style>
+<!--SPLIT-->
+<div class="stage" aria-hidden="true">
+  <canvas id="stage-canvas" class="stage__canvas"></canvas>
+  <div class="stage__veil"></div>
+  <div class="stage__grain"></div>
+</div>
+
+<div class="page" id="topo">
+  <div class="nav-dock">
+    <div id="nav"></div>
+  </div>
+
+  <header class="hero shell">
+    <div class="hero__kicker">
+      <span class="hero__badge"><span class="hero__dot"></span>Agência digital</span>
+      <span class="hero__badge">Fundada por Dener Zanetoni e Weslley Paiva</span>
+    </div>
+
+    <div class="hero__title">
+      <h1 class="t-display">Zaniva</h1>
+      <p class="hero__sub">Agência digital</p>
+    </div>
+
+    <div class="hero__foot">
+      <p class="lede">
+        Sites, aplicativos, automação no WhatsApp e presença no Google — construídos, publicados e
+        mantidos por quem atende você direto. Sem intermediário, sem projeto parado.
+      </p>
+      <div class="hero__actions">
+        <a class="btn" id="hero-cta" href="#contato">
+          Começar um projeto
+          <svg class="btn__arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+        </a>
+        <a class="btn btn--ghost" href="#servicos">Ver serviços</a>
+      </div>
+    </div>
+  </header>
+
+  <section id="entrada" aria-label="Entrada"></section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span class="marquee__item">Google Meu Negócio</span>
+      <span class="marquee__item">Sites</span>
+      <span class="marquee__item">Landing pages</span>
+      <span class="marquee__item">Chatbot no WhatsApp</span>
+      <span class="marquee__item">Aplicativos</span>
+      <span class="marquee__item">Automação</span>
+      <span class="marquee__item">SEO local</span>
+      <span class="marquee__item">Manutenção</span>
+      <span class="marquee__item">Google Meu Negócio</span>
+      <span class="marquee__item">Sites</span>
+      <span class="marquee__item">Landing pages</span>
+      <span class="marquee__item">Chatbot no WhatsApp</span>
+      <span class="marquee__item">Aplicativos</span>
+      <span class="marquee__item">Automação</span>
+      <span class="marquee__item">SEO local</span>
+      <span class="marquee__item">Manutenção</span>
+    </div>
+  </div>
+
+  <section class="section" id="servicos">
+    <div class="shell">
+      <div class="section__head">
+        <p class="eyebrow">Serviços</p>
+        <h2 class="t-h2">Escolha por onde começar</h2>
+        <p class="lede">
+          Cada frente funciona sozinha e funciona melhor junto. Role para ver as cinco empilharem — e
+          peça proposta na que resolve o seu problema agora.
+        </p>
+      </div>
+    </div>
+    <div id="servicos-stack" class="services__stack"></div>
+  </section>
+
+  <section class="section" id="estudio">
+    <div class="shell">
+      <div class="section__head">
+        <p class="eyebrow">O estúdio</p>
+        <h2 class="t-h2">Como a Zaniva trabalha</h2>
+        <p class="lede">
+          Estúdio pequeno, fila curta e prazo escrito na proposta. Passe o cursor pelos cartões para
+          ver cada parte funcionando.
+        </p>
+      </div>
+    </div>
+    <div class="shell shell--wide section__body">
+      <div id="estudio-bento"></div>
+    </div>
+  </section>
+
+  <section class="section" id="fundadores">
+    <div class="shell">
+      <div class="section__head">
+        <p class="eyebrow">Quem faz</p>
+        <h2 class="t-h2">Os co-fundadores</h2>
+        <p class="lede">
+          A Zaniva nasceu de duas pessoas que continuam botando a mão no projeto. Você fala com elas
+          do orçamento à manutenção.
+        </p>
+      </div>
+    </div>
+    <div class="shell shell--wide section__body">
+      <div id="fundadores-bento"></div>
+    </div>
+  </section>
+
+  <section class="section" id="contato">
+    <div class="shell">
+      <div class="contact">
+        <div>
+          <p class="eyebrow">Contato</p>
+          <h2 class="t-h2" style="margin-top:18px">Conta o que você precisa</h2>
+          <p class="lede" style="margin-top:18px">
+            Manda uma mensagem com o que a empresa faz e onde está travando. A gente responde com um
+            caminho e um orçamento — sem reunião obrigatória antes.
+          </p>
+          <div class="contact__actions">
+            <a class="btn" id="contato-whatsapp" href="#" target="_blank" rel="noopener">
+              Chamar no WhatsApp
+              <svg class="btn__arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+            </a>
+            <button class="btn btn--ghost" type="button" id="copiar-email">Copiar e-mail</button>
+          </div>
+          <p class="contact__hint">
+            Atendimento remoto para todo o Brasil. Resposta no mesmo dia útil.
+          </p>
+        </div>
+
+        <div>
+          <ul class="contact__list" id="contato-lista"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <span>© <span id="ano">2026</span> Zaniva Agência Digital</span>
+      <nav class="footer__links" aria-label="Rodapé">
+        <a href="#servicos">Serviços</a>
+        <a href="#estudio">Estúdio</a>
+        <a href="#fundadores">Co-fundadores</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <span>Dener Zanetoni · Weslley Paiva</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+/*INJECT:js*/
+</script>

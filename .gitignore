@@ -1,0 +1,9 @@
+# saídas do build — geradas por `node build.mjs`
+web/
+dist/
+
+node_modules/
+shots/
+.vercel
+.DS_Store
+*.log

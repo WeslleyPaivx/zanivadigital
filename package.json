@@ -1,0 +1,10 @@
+{
+  "name": "zanivadigital",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Site institucional da Zaniva Agência Digital",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  }
+}
