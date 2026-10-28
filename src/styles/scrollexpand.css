@@ -95,9 +95,15 @@
   text-transform: uppercase;
   text-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
   opacity: var(--se-title-opacity, 1);
-  transform: translate3d(0, var(--se-title-shift, 0px), 0);
+  /* a escala acompanha a abertura da moldura, para o título nunca vazar dela */
+  transform: translate3d(0, var(--se-title-shift, 0px), 0) scale(var(--se-title-scale, 1));
   pointer-events: none;
   will-change: transform, opacity;
+}
+
+.scroll-expand__title-inner {
+  display: inline-block;
+  max-width: 100%;
 }
 
 .scroll-expand__title img {

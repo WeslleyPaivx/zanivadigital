@@ -66,10 +66,14 @@
     stage.appendChild(frame);
 
     var titleNode = null;
+    var titleInner = null;
     if (o.title) {
       titleNode = document.createElement('h2');
       titleNode.className = 'scroll-expand__title';
-      titleNode.innerHTML = o.title;
+      titleInner = document.createElement('span');
+      titleInner.className = 'scroll-expand__title-inner';
+      titleInner.innerHTML = o.title;
+      titleNode.appendChild(titleInner);
       stage.appendChild(titleNode);
     }
 
@@ -103,6 +107,30 @@
     var raf = 0;
     var written = {};
 
+    /* O título vive por cima da moldura, não dentro dela, então sem isto ele
+       transborda enquanto a moldura ainda está fechada. Medimos o título uma
+       vez por tamanho de palco e deixamos ele crescer junto com a abertura. */
+    var baseW = 0;
+    var baseH = 0;
+    var measuredAt = -1;
+
+    function measureTitle() {
+      if (!titleInner) return;
+      measuredAt = stage.clientWidth;
+      baseW = titleInner.offsetWidth;
+      baseH = titleInner.offsetHeight;
+    }
+
+    if (titleInner) {
+      var titleImage = titleInner.querySelector('img');
+      if (titleImage && !titleImage.complete) {
+        titleImage.addEventListener('load', function () {
+          measuredAt = -1;
+          schedule();
+        });
+      }
+    }
+
     function set(name, value) {
       if (written[name] === value) return;
       written[name] = value;
@@ -129,6 +157,16 @@
       set('--se-radius', (radius * (1 - p) + 2).toFixed(2) + 'px');
       set('--se-zoom', (1 + (mediaZoom - 1) * (1 - p)).toFixed(4));
       set('--se-scrim', (0.22 + 0.56 * p).toFixed(3));
+
+      if (titleInner) {
+        if (stage.clientWidth !== measuredAt) measureTitle();
+        if (baseW > 0 && baseH > 0) {
+          var innerW = stage.clientWidth * (1 - (2 * insetX * (1 - p)) / 100);
+          var innerH = stage.clientHeight * (1 - (2 * insetY * (1 - p)) / 100);
+          var fit = Math.min(1, (innerW * 0.84) / baseW, (innerH * 0.8) / baseH);
+          set('--se-title-scale', Math.max(0.2, fit).toFixed(4));
+        }
+      }
 
       var titleOut = range(raw, 0.3, 0.72);
       set('--se-title-opacity', (1 - titleOut).toFixed(3));
